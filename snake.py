@@ -74,3 +74,15 @@ class gameInstance:
 if __name__ == "__main__":
     surface = initWindow()
     gameInstance(surface)
+
+# Update local git repository
+"""
+git pull
+"""
+
+# Commit changes to local git repository and push to GitHub
+"""
+git add --all
+git commit -m "message"
+git push
+"""
