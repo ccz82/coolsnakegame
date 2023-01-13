@@ -2,6 +2,9 @@
 import pygame
 pygame.init()
 
+# Import randint function
+from random import randint
+
 # Draw a new window and return Surface object
 def initWindow(caption = "cool snake game", width = 512, height = 512):
     # Set window title
@@ -19,7 +22,8 @@ class gameInstance:
                 snakePosX = 256,
                 snakePosY = 256,
                 snakeSizeX = 16,
-                snakeSizeY = 16
+                snakeSizeY = 16,
+                snakeDirection = ''
                 ):
         self.gameSurface = gameSurface
         self.gameColor = gameColor
@@ -28,6 +32,7 @@ class gameInstance:
         self.snakePosY = snakePosY
         self.snakeSizeX = snakeSizeX
         self.snakeSizeY = snakeSizeY
+        self.snakeDirection = snakeDirection
         self.gameLoop()
 
     def drawHead(self):
@@ -39,6 +44,16 @@ class gameInstance:
             )
         pygame.draw.rect(self.gameSurface, self.snakeColor, rect)
         pygame.display.update()
+
+    def updateDirection(self):
+        if self.snakeDirection == 'L':
+            self.snakePosX -= 16
+        if self.snakeDirection == 'R':
+            self.snakePosX += 16
+        if self.snakeDirection == 'U':
+            self.snakePosY -= 16
+        if self.snakeDirection == 'D':
+            self.snakePosY += 16
 
     def gameLoop(self):
 
@@ -54,22 +69,28 @@ class gameInstance:
             # Draw snake head
             self.drawHead()
 
-            # Movement of head
+            # Get direction
             key = pygame.key.get_pressed()
             if key[pygame.K_LEFT] or key[pygame.K_a]:
-                self.snakePosX -= 16
+                self.snakeDirection = 'L'
             elif key[pygame.K_RIGHT] or key[pygame.K_d]:
-                self.snakePosX += 16
+                self.snakeDirection = 'R'
             elif key[pygame.K_UP] or key[pygame.K_w]:
-                self.snakePosY -= 16
+                self.snakeDirection = 'U'
             elif key[pygame.K_DOWN] or key[pygame.K_s]:
-                self.snakePosY += 16
+                self.snakeDirection = 'D'
 
-            # Clear board and update head
+            # Update direction
+            self.updateDirection()
+
+            # Clear board
             self.gameSurface.fill(self.gameColor)
+
+            # Draw snake head
             self.drawHead()
 
-            pygame.time.wait(100)       
+            # Time delay in ms, lower delay = higher snake speed
+            pygame.time.wait(120)
 
 if __name__ == "__main__":
     surface = initWindow()
@@ -86,3 +107,4 @@ git add --all
 git commit -m "message"
 git push
 """
+
