@@ -10,9 +10,9 @@ class Snake:
     def __init__(
                 self,
                 gameSurface,
-                snakeColor = (255, 0, 0),
-                snakePosX = 256,
-                snakePosY = 256,
+                snakeColor = (0, 255, 0),
+                snakePosX = randint(0, 512),
+                snakePosY = randint(0, 512),
                 snakeSizeX = 16,
                 snakeSizeY = 16,
                 snakeDirection = ''
@@ -45,6 +45,48 @@ class Snake:
         if self.snakeDirection == 'D':
             self.snakePosY += 16
 
+# Generate an apple randomly
+def generateApple(gameSurface):
+    apple = pygame.Rect(
+        randint(0, 512),
+        randint(0, 512),
+        16,
+        16
+        )
+    pygame.draw.rect(gameSurface, (255, 0, 0), rect)
+    pygame.display.update()
+
+# Generate border around window
+def generateBorder(gameSurface):
+    leftRect = pygame.Rect(
+        0,
+        0,
+        8,
+        512
+        )
+    rightRect = pygame.Rect(
+        -512,
+        0,
+        8,
+        512
+        )
+    topRect = pygame.Rect(
+        0,
+        0,
+        512,
+        8
+        )
+    botRect = pygame.Rect(
+        0,
+        -512,
+        512,
+        8
+        )
+    rectangles = [leftRect, rightRect, topRect, botRect]
+    for i in range(4):
+        pygame.draw.rect(gameSurface, (0, 0, 0), rectangles[i])
+    pygame.display.update() 
+
 # Main program
 if __name__ == "__main__":
 
@@ -68,15 +110,16 @@ if __name__ == "__main__":
 
     # Game loop
     exit = False
+
+    # Draw snake head
+    snake.drawHead()
+
     while not exit:
 
         # Check if the user has exited the game
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit = True
-
-        # Draw snake head
-        snake.drawHead()
 
         # Get direction
         key = pygame.key.get_pressed()
@@ -94,6 +137,9 @@ if __name__ == "__main__":
 
         # Clear board
         snake.gameSurface.fill(white)
+
+        # Create border
+        generateBorder(surface)
 
         # Draw snake head
         snake.drawHead()
