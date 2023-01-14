@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 
 # Import randint function
-from random import randint
+from random import randrange
 
 class Snake:
 
@@ -11,8 +11,8 @@ class Snake:
                 self,
                 gameSurface,
                 snakeColor = (0, 255, 0),
-                snakePosX = randint(0, 512),
-                snakePosY = randint(0, 512),
+                snakePosX = randrange(0, 512, 16),
+                snakePosY = randrange(0, 512, 16),
                 snakeSizeX = 16,
                 snakeSizeY = 16,
                 snakeDirection = ''
@@ -48,12 +48,12 @@ class Snake:
 # Generate an apple randomly
 def generateApple(gameSurface):
     apple = pygame.Rect(
-        randint(0, 512),
-        randint(0, 512),
+        randrange(0, 512),
+        randrange(0, 512),
         16,
         16
         )
-    pygame.draw.rect(gameSurface, (255, 0, 0), rect)
+    pygame.draw.rect(gameSurface, (255, 0, 0), apple)
     pygame.display.update()
 
 # Generate border around window
@@ -61,26 +61,26 @@ def generateBorder(gameSurface):
     leftRect = pygame.Rect(
         0,
         0,
-        8,
+        16,
         512
         )
     rightRect = pygame.Rect(
-        -512,
+        496,
         0,
-        8,
+        16,
         512
         )
     topRect = pygame.Rect(
         0,
         0,
         512,
-        8
+        16
         )
     botRect = pygame.Rect(
         0,
-        -512,
+        496,
         512,
-        8
+        16
         )
     rectangles = [leftRect, rightRect, topRect, botRect]
     for i in range(4):
