@@ -12,44 +12,47 @@ class Snake:
                 gameSurface,
                 snakeSize,
                 snakeColor = (0, 255, 0),
-                headPosX = randrange(0, 512, 32),
-                headPosY = randrange(0, 512, 32)
                 ):
         self.gameSurface = gameSurface
         self.snakeColor = snakeColor
-        self.headPosX = snakePosX
-        self.headPosY = snakePosY
         self.snakeSize = snakeSize
         self.snakeDirection = ''
-        self.snakeList = []
+        self.snakeList = [(randrange(0, 512, self.snakeSize), randrange(0, 512, self.snakeSize))]
 
-    def updateSnake(self):
-        if len(self.snakeList) == 0:
-            self.snakeList.append((self.headPosX, self.headPosY))
-        else:
-            pass
-        
+    def growSnake(self):
+        if self.snakeDirection == 'L':
+            self.snakeList.append((self.snakeList[-1][0] - self.snakeSize, self.snakeList[-1][1]))
+        if self.snakeDirection == 'R':
+            self.snakeList.append((self.snakeList[-1][0] + self.snakeSize, self.snakeList[-1][1] - self.snakeSize))
+        if self.snakeDirection == 'U':
+            self.snakeList.append((self.snakeList[-1][0], self.snakeList[-1][1] + self.snakeSize))
+        if self.snakeDirection == 'D':
+            self.snakeList.append((self.snakeList[-1][0], self.snakeList[-1][1] - self.snakeSize))
+
     def drawSnake(self):
-        head = pygame.Rect(
-            self.headPosX,
-            self.headPosY,
-            self.snakeSize,
-            self.snakeSize
-            )
-        pygame.draw.rect(self.gameSurface, self.snakeColor, head)
-       
+        for x, y in self.snakeList:
+            pygame.draw.rect(self.gameSurface, self.snakeColor, pygame.Rect(
+                x,
+                y,
+                self.snakeSize,
+                self.snakeSize
+                ))
         pygame.display.update()
-        return head
-                
+        return pygame.Rect(self.snakeList[0][0], self.snakeList[0][1], self.snakeSize, self.snakeSize)
+
     def updateDirection(self):
         if self.snakeDirection == 'L':
-            self.headPosX -= self.snakeSize
+            self.snakeList[0] = (self.snakeList[0][0] - self.snakeSize, self.snakeList[0][1])
+            # self.headPosX += self.snakeSize
         if self.snakeDirection == 'R':
-            self.headPosX += self.snakeSize
+            self.snakeList[0] = (self.snakeList[0][0] + self.snakeSize, self.snakeList[0][1])
+            # self.headPosX += self.snakeSize
         if self.snakeDirection == 'U':
-            self.headPosY -= self.snakeSize
+            self.snakeList[0] = (self.snakeList[0][0], self.snakeList[0][1] - self.snakeSize)
+            # self.headPosY -= self.snakeSize
         if self.snakeDirection == 'D':
-            self.headPosY += self.snakeSize
+            self.snakeList[0] = (self.snakeList[0][0], self.snakeList[0][1] + self.snakeSize)
+            # self.headPosY += self.snakeSize
 
 # Generate an apple position
 def generateApplePos():
@@ -74,7 +77,7 @@ if __name__ == "__main__":
     width = 512
     height = 512
     gridSize = 32
-    white = pygame.Color(255, 255, 255)
+    backgroundColor = pygame.Color(255, 255, 255)
 
     # Set window title
     pygame.display.set_caption(caption)
@@ -88,8 +91,8 @@ if __name__ == "__main__":
     # Create a Snake object, passing in pygame.Surface
     snake = Snake(gameSurface = surface, snakeSize = gridSize)
     
-    # Draw initial snake head
-    snakeHead = snake.drawSnake()
+    # Draw initial snake (head)
+    head = snake.drawSnake()
 
     # Generate initial apple
     applePos = generateApplePos()
@@ -99,7 +102,7 @@ if __name__ == "__main__":
     # Check if apple and snake head spawned at the same place initially
     if appleEaten:
         applePos = generateApplePos()
-        updateApple(surface,applePos)
+        updateApple(surface, applePos)
 
     # Game loop
     exit = False
@@ -111,7 +114,10 @@ if __name__ == "__main__":
                 exit = True
 
         # Check if the snake head has touched the edge
-        if snake.snakePosX < 0 or snake.snakePosX > 512 - gridSize or snake.snakePosY < 0 or snake.snakePosY > 512 - gridSize:
+        if (snake.snakeList[0][0] < 0
+        or snake.snakeList[0][0] > 512 - gridSize
+        or snake.snakeList[0][1] < 0
+        or snake.snakeList[0][1] > 512 - gridSize):
             exit = True
 
         # Get direction
@@ -129,23 +135,23 @@ if __name__ == "__main__":
         snake.updateDirection()
 
         # Check if apple eaten
-        appleEaten = pygame.Rect.colliderect(applePos, snakeHead)
+        appleEaten = pygame.Rect.colliderect(applePos, head)
         if appleEaten:
 
             # Generate a new position for the apple
             applePos = generateApplePos()
 
             # Grow the snake
-            snake.updateSnake()
-        
+            snake.growSnake()
+
         # Clear board
-        snake.gameSurface.fill(white)
+        snake.gameSurface.fill(backgroundColor)
 
         # Update apple
         updateApple(surface, applePos)
 
-        # Update snake head
-        snakeHead = snake.drawSnake()
+        # Update snake
+        head = snake.drawSnake()
 
         # FPS management
-        fps.tick(10)
+        fps.tick(6)
