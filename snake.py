@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     # Create a Snake object, passing in pygame.Surface
     snake = Snake(gameSurface = surface, snakeSize = gridSize)
-    
+
     # Draw initial snake (head)
     head = snake.drawSnake()
 
@@ -99,19 +99,30 @@ if __name__ == "__main__":
     updateApple(surface, applePos)
     appleEaten = False
 
-    # Check if apple and snake head spawned at the same place initially
-    if appleEaten:
-        applePos = generateApplePos()
-        updateApple(surface, applePos)
-
     # Game loop
     exit = False
     while not exit:
 
-        # Check if the user has exited the game
+        # pygame event queue
         for event in pygame.event.get():
+
+            # Check if user has exited the game
             if event.type == pygame.QUIT:
                 exit = True
+
+            # Check if user has changed direction of snake
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    snake.snakeDirection = 'L'
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    snake.snakeDirection = 'R'
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    snake.snakeDirection = 'U'
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    snake.snakeDirection = 'D'
+
+        # Update direction
+        snake.updateDirection()
 
         # Check if the snake head has touched the edge
         if (snake.snakeList[0][0] < 0
@@ -119,20 +130,6 @@ if __name__ == "__main__":
         or snake.snakeList[0][1] < 0
         or snake.snakeList[0][1] > 512 - gridSize):
             exit = True
-
-        # Get direction
-        key = pygame.key.get_pressed()
-        if key[pygame.K_LEFT] or key[pygame.K_a]:
-            snake.snakeDirection = 'L'
-        if key[pygame.K_RIGHT] or key[pygame.K_d]:
-            snake.snakeDirection = 'R'
-        if key[pygame.K_UP] or key[pygame.K_w]:
-            snake.snakeDirection = 'U'
-        if key[pygame.K_DOWN] or key[pygame.K_s]:
-            snake.snakeDirection = 'D'
-
-        # Update direction
-        snake.updateDirection()
 
         # Check if apple eaten
         appleEaten = pygame.Rect.colliderect(applePos, head)
