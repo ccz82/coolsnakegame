@@ -4,7 +4,7 @@
 just a cool snake game
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-## How to clone repository locally
+## Installation
 
 Clone the project repository
 
