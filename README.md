@@ -29,29 +29,3 @@ Start editing snake.py or to play it, run:
 ```bash
   python snake.py
 ```
-## How to update repository locally
-
-Update the project repository
-
-```bash
-  git pull
-```
-## How to push changes to the GitHub repository
-
-Add all untracked files into the local git repository
-
-```bash
-  git add --all
-```
-
-Commit the changes
-
-```bash
-  git commit -m "Your message"
-```
-
-Push the changes
-
-```bash
-  git push
-```
